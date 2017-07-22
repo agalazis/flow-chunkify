@@ -170,5 +170,43 @@ describe( 'flow-chunkify', function tests() {
 			done();
 		} // end FUNCTION onRead()
 	});
+	it( 'should push the rest of the data on source close', function test( done ) {
+		var data, expected, cStream, NUMVALUES = 3;
 
+		// Simulate some data that do no match chunk size
+		data = [ 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6 ];
+
+		// Expected values:
+		expected = [ [2,2,2], [3,3,3], [4,4,4], [5,5,5], [6,6]];
+
+		// Create a new chunkify stream:
+		cStream = chunkStream()
+			.numValues( NUMVALUES )
+			.stream();
+
+		// Mock reading from the stream:
+		utils.readStream( cStream, onRead );
+
+		// Mock piping a data to the stream:
+		utils.writeStream( data, cStream );
+
+		return;
+
+		/**
+		* FUNCTION: onRead( error, actual )
+		*	Read event handler. Checks for errors and compares streamed data to expected data.
+		*/
+		function onRead( error, actual ) {
+			expect( error ).to.not.exist;
+
+			for ( var i = 0; i < expected.length; i++ ) {
+				assert.deepEqual(
+					actual[ i ],
+					expected[ i ]
+				);
+			}
+
+			done();
+		} // end FUNCTION onRead()
+	});
 });
