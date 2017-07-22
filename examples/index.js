@@ -13,9 +13,9 @@ function setupExample(transformFactory, size){
 	const randomArray = createArray(size);
 	const stream = eventStream.readArray(randomArray);
 	return stream.pipe( transformFactory.stream() )
-	.pipe( eventStream.map( function( d, clbk ){
-		clbk( null, 'stream'+size+': '+JSON.stringify( d )+'\n' );
-	}))
+		.pipe( eventStream.map( function( d, clbk ){
+			clbk( null, 'stream'+size+': '+JSON.stringify( d )+'\n' );
+		}))
 	
 }
 
